@@ -1,0 +1,64 @@
+class List {
+	field int data;
+	field List next;
+
+	/* Creates a new List object. */
+	constructor List new(int car, List cdr) {
+		let data = car;
+		let next = cdr;
+		return this;
+	}
+
+	/* Disposes this List by recursively disposing its tail. */
+	method void dispose() {
+		if (~(next =  null)) {
+			do next.dispose();
+		}
+		// Use an OS routine to recycle the memory held by this object.
+		do Memory.deAlloc(this);
+		return;
+	}
+
+	/* Prints the list*/
+
+	method void print() {
+		do Output.printString(" -> ");
+		do Output.printInt(data);
+		if (~(next =  null)) {
+			do next.print();
+		}
+		return;
+	}
+
+	/* Inserts the argument in the right position of the list (ascending order)*/
+	method void insertInOrder(int ins){
+		if ((~(ins > data)) | (next = null)){
+			if ((next = null) & (ins > data)){
+				let next = List.new(ins, null);
+			}
+			else{
+				let next = List.new(data, next);
+				let data = ins;
+			}
+		}
+		else{
+			do next.insertInOrder(ins);
+		}	
+		return;
+	}
+
+	/* Searches the argument in the list, if found, it returns the corresponding List object*/
+	method List find(int toFind){
+		if (data = toFind){
+			return List.new(data, next);
+		}
+		else{
+			if (next = null){
+			return null;
+			}
+			else{
+			return next.find(toFind);
+			}
+		}
+	}
+} 
